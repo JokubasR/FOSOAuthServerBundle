@@ -69,7 +69,6 @@ class Oauth2Authenticator extends AbstractAuthenticator
             $accessToken = $this->serverService->verifyAccessToken($tokenString);
 
             $user = $accessToken->getUser();
-            $client = $accessToken->getClient();
 
             if (null !== $user) {
                 try {
@@ -92,7 +91,7 @@ class Oauth2Authenticator extends AbstractAuthenticator
 
             $accessTokenBadge = new AccessTokenBadge($accessToken, $roles);
 
-            return new SelfValidatingPassport(new UserBadge($client->getUserIdentifier()), [$accessTokenBadge]);
+            return new SelfValidatingPassport( new UserBadge( $user->getUserIdentifier() ), [ $accessTokenBadge ] );
         } catch (OAuth2ServerException $e) {
             throw new AuthenticationException('OAuth2 authentication failed', 0, $e);
         }
